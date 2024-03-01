@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 
 import com.skytech.pomodoro.ui.theme.PomodoroTheme
+import com.skytech.pomodoro.view.HomePage
 
 
 class MainActivity : ComponentActivity() {
