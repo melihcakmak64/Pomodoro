@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import com.skytech.pomodoro.ui.theme.background_color_Blue_50
 import com.skytech.pomodoro.ui.theme.background_color_Green50
@@ -23,6 +24,7 @@ class HomeViewModel : ViewModel(){
     var pomoState: State<PomodoroState> =_pomoState
     var sound=
         mutableStateOf(false)
+
 
 
 

@@ -1,5 +1,6 @@
 package com.skytech.pomodoro.view
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,20 +13,30 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.skytech.pomodoro.PreferencesManager
 import com.skytech.pomodoro.R
 import com.skytech.pomodoro.view_model.HomeViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(closeButton:() -> Unit,viewModel: HomeViewModel){
+fun SettingsScreen(preferencesManager: PreferencesManager,closeButton:() -> Unit,viewModel: HomeViewModel){
+    val context= LocalContext.current
+
+
   var focusTime = remember {
       mutableStateOf(HomeViewModel.PomodoroState.FOCUS.durationInMinutes/60)
   }
@@ -36,10 +47,18 @@ fun SettingsScreen(closeButton:() -> Unit,viewModel: HomeViewModel){
         mutableStateOf(HomeViewModel.PomodoroState.LONG_BREAK.durationInMinutes/60)
     }
 
-
     var soundState= remember {
         viewModel.sound
     }
+
+    LaunchedEffect(key1 = true ){
+        CoroutineScope(Dispatchers.Default).launch {
+            viewModel.sound.value=preferencesManager.getSound()
+
+        }
+    }
+
+
 
 
 
@@ -62,7 +81,12 @@ fun SettingsScreen(closeButton:() -> Unit,viewModel: HomeViewModel){
 
            ListItem(headlineText = { Text(text = "Sound ") }, trailingContent = { Switch(
                checked = viewModel.sound.value,
-               onCheckedChange = {viewModel.changeSound()
+               onCheckedChange = {
+                   viewModel.changeSound()
+
+                   CoroutineScope(Dispatchers.Default).launch {
+                       preferencesManager.setSound(viewModel.sound.value)
+                   }
                }
            )})
 

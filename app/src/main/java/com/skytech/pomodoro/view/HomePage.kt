@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.skytech.pomodoro.PreferencesManager
 import com.skytech.pomodoro.R
 import com.skytech.pomodoro.view_model.HomeViewModel
 import kotlinx.coroutines.delay
@@ -50,6 +51,7 @@ fun HomePage(){
     val viewState by homeViewModel.pomoState
     val context = LocalContext.current
     val mediaPlayer = remember { MediaPlayer.create(context, R.raw.timer) }
+    val preferencesManager= PreferencesManager(context)
 
 
     var isPaused by remember { mutableStateOf(true) }
@@ -173,7 +175,7 @@ fun HomePage(){
                 Dialog(onDismissRequest = {openAlertDialog.value=false
                     timeLeft=viewState.durationInMinutes
                                           },) {
-                    SettingsScreen(closeButton = {
+                    SettingsScreen(preferencesManager = preferencesManager,closeButton = {
                         openAlertDialog.value=false
                         timeLeft=viewState.durationInMinutes
 
