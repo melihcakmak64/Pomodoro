@@ -53,7 +53,7 @@ fun ChangeValueButton(state: HomeViewModel.PomodoroState, lenght: MutableState<I
             if(lenght.value-1>0){ lenght.value-=1
                 state.updateStateDuration(lenght.value*60)}
            }) {
-            Icon(painter = painterResource(id = R.drawable.increment_icon), contentDescription = "Increment")
+            Icon(painter = painterResource(id = R.drawable.baseline_remove_24), contentDescription = "Increment")
         }
         Text(text = (lenght.value).toString())
         IconButton(onClick = {
