@@ -82,13 +82,7 @@ class HomeViewModel : ViewModel(){
             }
         }
     }
-    fun updateDuration(stateType:PomodoroState,newDuration: Int) {
-        when (_pomoState.value) {
-            is PomodoroState.FOCUS -> (_pomoState.value as PomodoroState.FOCUS).updateStateDuration(newDuration)
-            is PomodoroState.SHORT_BREAK -> (_pomoState.value as PomodoroState.SHORT_BREAK).updateStateDuration(newDuration)
-            is PomodoroState.LONG_BREAK -> (_pomoState.value as PomodoroState.LONG_BREAK).updateStateDuration(newDuration)
-        }
-    }
+ 
 
     fun changeSound(){
         sound.value=!sound.value
