@@ -11,20 +11,23 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 //Focus
-val background_color_Red50= Color(0xFFFFF2F2)
-val clock_color_Red900=Color(0xFF471515)
-val focus_color_RedAlpha100=Color(0x27FF4C4C)
-val play_color_RedAlpha700=Color(0xB5FF4C4C)
+val focus_background_color= Color(0xFF32EFCD)
+val focus_clock_color=Color(0xFF0DA186)
+val focus_title_color=Color(0xFF0DA186)
+val focus_button_background_color=Color(0xFF11D6B3)
+val focus_icon_color=Color(0xFF0DA186)
 
 
 //ShortBreak
-val background_color_Green50=Color(0xFFF2FFF5)
-val short_color_GreenAlpha100=Color(0x264DDA6E)
-val clock_color_Green900=Color(0xFF14401D)
-val play_color_GreenAlph600=Color(0x9E4DDA6E)
+val short_background_color= Color(0xFFFFD46F)
+val short_clock_color=Color(0xFFDC9A00)
+val short_title_color=Color(0xFFDC9A00)
+val short_button_background_color=Color(0xFFFFBE26)
+val short_icon_color=Color(0xFFDC9A00)
 
 //LongBreak
-val background_color_Blue_50=Color(0xFFF2F9FF)
-val long_color_BlueAlpha100=Color(0x264CACFF)
-val clock_color_Blue900=Color(0XFF153047)
-val play_color_BlueAlpha600=Color(0x9E4CACFF)
+val long_background_color= Color(0xFF38DFFD)
+val long_clock_color=Color(0xFF029CB8)
+val long_title_color=Color(0xFF029CB8)
+val long_button_background_color=Color(0xFF02D0F5)
+val long_icon_color=Color(0xFF029CB8)

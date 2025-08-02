@@ -26,7 +26,7 @@ import com.skytech.pomodoro.R
 import com.skytech.pomodoro.view_model.HomeViewModel
 
 @Composable
-fun PomoButton(height: Dp, width: Dp, backgroundColor: Color, buttonIcon: ImageVector, onClick: () -> Unit){
+fun PomoButton(height: Dp, width: Dp, backgroundColor: Color, buttonIcon: ImageVector, iconColor: Color, onClick: () -> Unit){
     Box(modifier = Modifier
         .size(height = height, width = width)
         .background(color = backgroundColor, shape = RoundedCornerShape(25.dp))
@@ -35,7 +35,7 @@ fun PomoButton(height: Dp, width: Dp, backgroundColor: Color, buttonIcon: ImageV
 
 
     ){
-        Icon(modifier = Modifier.fillMaxSize(),imageVector = buttonIcon ,contentDescription ="" )
+        Icon(modifier = Modifier.fillMaxSize(),imageVector = buttonIcon ,contentDescription ="" , tint = iconColor)
     }
 
 

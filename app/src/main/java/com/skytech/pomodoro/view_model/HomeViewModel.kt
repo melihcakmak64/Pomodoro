@@ -2,22 +2,24 @@ package com.skytech.pomodoro.view_model
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
-import com.skytech.pomodoro.ui.theme.background_color_Blue_50
-import com.skytech.pomodoro.ui.theme.background_color_Green50
-import com.skytech.pomodoro.ui.theme.background_color_Red50
-import com.skytech.pomodoro.ui.theme.clock_color_Blue900
-import com.skytech.pomodoro.ui.theme.clock_color_Green900
-import com.skytech.pomodoro.ui.theme.clock_color_Red900
-import com.skytech.pomodoro.ui.theme.focus_color_RedAlpha100
-import com.skytech.pomodoro.ui.theme.long_color_BlueAlpha100
-import com.skytech.pomodoro.ui.theme.play_color_BlueAlpha600
-import com.skytech.pomodoro.ui.theme.play_color_GreenAlph600
-import com.skytech.pomodoro.ui.theme.play_color_RedAlpha700
-import com.skytech.pomodoro.ui.theme.short_color_GreenAlpha100
+
+import com.skytech.pomodoro.ui.theme.focus_background_color
+import com.skytech.pomodoro.ui.theme.focus_button_background_color
+import com.skytech.pomodoro.ui.theme.focus_clock_color
+import com.skytech.pomodoro.ui.theme.focus_icon_color
+import com.skytech.pomodoro.ui.theme.focus_title_color
+import com.skytech.pomodoro.ui.theme.long_background_color
+import com.skytech.pomodoro.ui.theme.long_button_background_color
+import com.skytech.pomodoro.ui.theme.long_clock_color
+import com.skytech.pomodoro.ui.theme.long_icon_color
+import com.skytech.pomodoro.ui.theme.long_title_color
+import com.skytech.pomodoro.ui.theme.short_background_color
+import com.skytech.pomodoro.ui.theme.short_button_background_color
+import com.skytech.pomodoro.ui.theme.short_clock_color
+import com.skytech.pomodoro.ui.theme.short_icon_color
+import com.skytech.pomodoro.ui.theme.short_title_color
 
 class HomeViewModel : ViewModel(){
     private var _pomoState= mutableStateOf<PomodoroState>(PomodoroState.FOCUS)
@@ -36,17 +38,20 @@ class HomeViewModel : ViewModel(){
         val backgroundColor: Color,
         val titleColor: Color,
         val clockColor: Color,
-        val timerColor: Color,
         val buttonColor: Color,
-    ) {
-        object FOCUS : PomodoroState(25*60, "Focus", background_color_Red50, focus_color_RedAlpha100,
-            clock_color_Red900, play_color_RedAlpha700, focus_color_RedAlpha100
+        val iconColor: Color,
+
+        ) {
+        object FOCUS : PomodoroState(25*60, "FOCUS", focus_background_color, focus_title_color,
+            focus_clock_color, focus_button_background_color, focus_icon_color
         )
-        object SHORT_BREAK : PomodoroState(5*60, "Short Break", background_color_Green50, short_color_GreenAlpha100,
-            clock_color_Green900, play_color_GreenAlph600, short_color_GreenAlpha100
+        object SHORT_BREAK : PomodoroState(5*60, "SHORT\nBREAK", short_background_color, short_title_color,
+            short_clock_color, short_button_background_color,
+            short_icon_color
         )
-        object LONG_BREAK : PomodoroState(durationInMinutes = 10*60,"Long Break", background_color_Blue_50, long_color_BlueAlpha100,
-            clock_color_Blue900, play_color_BlueAlpha600, long_color_BlueAlpha100
+        object LONG_BREAK : PomodoroState(durationInMinutes = 10*60,"LONG\n" +
+                "BREAK",  long_background_color, long_title_color,
+            long_clock_color, long_button_background_color, long_icon_color
         )
 
 
@@ -82,7 +87,7 @@ class HomeViewModel : ViewModel(){
             }
         }
     }
- 
+
 
     fun changeSound(){
         sound.value=!sound.value

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.filled.FastForward
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -40,87 +42,91 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skytech.pomodoro.PreferencesManager
 import com.skytech.pomodoro.R
+import com.skytech.pomodoro.ui.theme.RubikMonoOne
 import com.skytech.pomodoro.view_model.HomeViewModel
 import kotlinx.coroutines.delay
 
 
-
 @Composable
-fun HomePage(){
+fun HomePage() {
     val homeViewModel: HomeViewModel = viewModel()
     val viewState by homeViewModel.pomoState
     val context = LocalContext.current
     val mediaPlayer = remember { MediaPlayer.create(context, R.raw.timer) }
-    val preferencesManager= PreferencesManager(context)
+    val preferencesManager = PreferencesManager(context)
 
 
     var isPaused by remember { mutableStateOf(true) }
     var timeLeft by remember { mutableStateOf(viewState.durationInMinutes) }
-    var cycleCount by remember{ mutableStateOf(0) }
+    var cycleCount by remember { mutableStateOf(0) }
     val openAlertDialog = remember { mutableStateOf(false) }
 
 
-    LaunchedEffect(key1=timeLeft,key2 = isPaused){
-        if (timeLeft==0){
-            homeViewModel.nextState(viewState,cycleCount)
-            timeLeft=viewState.durationInMinutes
+    LaunchedEffect(key1 = timeLeft, key2 = isPaused) {
+        if (timeLeft == 0) {
+            homeViewModel.nextState(viewState, cycleCount)
+            timeLeft = viewState.durationInMinutes
             cycleCount++
         }
 
-        if (timeLeft == 3 && !isPaused&& homeViewModel.sound.value) {
+        if (timeLeft == 3 && !isPaused && homeViewModel.sound.value) {
             // Play sound when timeLeft is 3 seconds and not paused
             mediaPlayer.start()
         }
 
 
-        while (timeLeft > 0&& !isPaused) {
-        delay(1000L)
-        timeLeft--
-    }
+        while (timeLeft > 0 && !isPaused) {
+            delay(1000L)
+            timeLeft--
+        }
 
     }
-    Surface(modifier = Modifier.fillMaxSize(),
-        color = viewState.backgroundColor){
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = viewState.backgroundColor
+    ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceEvenly
+            verticalArrangement = Arrangement.Top
         ) {
-            //---------------FOCUS-----------//
-            Box(
-                modifier = Modifier
-                    .border(
-                        1.dp,
-                        color = Color.Black,
-                        shape = RoundedCornerShape(16.dp)
-                    )
-
-                    .background(viewState.titleColor, shape = RoundedCornerShape(16.dp))
-
-
-            )
-            {
-                Row(modifier = Modifier.padding(8.dp))
-                {
-                    Icon(imageVector = Icons.Default.AccessTime, contentDescription = "Brain")
-                    Spacer(modifier = Modifier.size(10.dp))
-                    Text(
-                        text = viewState.description,
-                        fontSize = 19.sp
-                    )
-                }
-            }
-
 
             //-------------------------------TIME----------------------------//
-            Text(
-                text = "${(timeLeft / 60).toString().padStart(2, '0')}\n\n\n\n\n\n\n${
-                    (timeLeft % 60).toString().padStart(2, '0')
-                }",
-                fontSize = 210.sp,
-                fontWeight = FontWeight(800),
-                color = viewState.clockColor
-            )
+            Box(
+                modifier = Modifier
+                    .size(height = 245.dp, width = 240.dp)
+                    .background(
+                        color = Color.White,
+                        shape = RoundedCornerShape(bottomStart = 120.dp, bottomEnd = 120.dp)
+                    ), contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "${(timeLeft / 60).toString().padStart(2, '0')}\n${
+                        (timeLeft % 60).toString().padStart(2, '0')
+                    }",
+                    fontSize = 96.sp,
+                    fontWeight = FontWeight(400),
+                    color = viewState.clockColor,
+                    fontFamily = RubikMonoOne,
+                    lineHeight = 92.sp
+
+                )
+            }
+            Spacer(modifier = Modifier.height(30.dp))
+
+
+            //---------------FOCUS-----------//
+            Box(modifier = Modifier.height(150.dp)) {
+                Text(
+                    text = viewState.description,
+                    fontSize = 40.sp,
+                    fontWeight = FontWeight.W400,
+                    lineHeight = 64.sp,
+                    fontFamily = RubikMonoOne,
+                    color = viewState.titleColor
+
+                )
+            }
 
 
             //----------------------------BUTTONS------------------------------------------//
@@ -131,53 +137,51 @@ fun HomePage(){
                 horizontalArrangement = Arrangement.Center
             ) {
 
-                PomoButton(
-                    height = 80.dp,
-                    width = 80.dp,
-                    backgroundColor = viewState.buttonColor,
-                    buttonIcon = Icons.Default.MoreHoriz,
-                    onClick = {
-                        openAlertDialog.value=true
 
-                    })
-                Spacer(modifier = Modifier.width(15.dp))
                 PomoButton(
-                    height = 96.dp,
-                    width = 128.dp,
-                    backgroundColor = viewState.timerColor,
+                    height = 72.dp,
+                    width = 72.dp,
+                    backgroundColor = viewState.buttonColor,
                     buttonIcon = if (isPaused) Icons.Default.PlayArrow else Icons.Default.Pause,
+                    iconColor = viewState.iconColor,
                     onClick = { isPaused = !isPaused })
                 Spacer(modifier = Modifier.width(15.dp))
 
                 PomoButton(
-                    height = 80.dp,
-                    width = 80.dp,
+                    height = 72.dp,
+                    width = 72.dp,
                     backgroundColor = viewState.buttonColor,
                     buttonIcon = Icons.Default.FastForward,
+                    iconColor = viewState.iconColor,
                     onClick = {
-                         homeViewModel.nextState(viewState, cycleCount )
+                        homeViewModel.nextState(viewState, cycleCount)
                         mediaPlayer.stop()
-
-
-
-                        timeLeft=viewState.durationInMinutes
+                        timeLeft = viewState.durationInMinutes
                         cycleCount++
-
-
-
-
-
                     })
 
             }
+            PomoButton(
+                height = 72.dp,
+                width = 72.dp,
+                backgroundColor = Color.Transparent,
+                buttonIcon = Icons.Default.Settings,
+                iconColor = viewState.iconColor,
+                onClick = {
+                    openAlertDialog.value = true
 
-            if (openAlertDialog.value==true){
-                Dialog(onDismissRequest = {openAlertDialog.value=false
-                    timeLeft=viewState.durationInMinutes
-                                          },) {
-                    SettingsScreen(preferencesManager = preferencesManager,closeButton = {
-                        openAlertDialog.value=false
-                        timeLeft=viewState.durationInMinutes
+                })
+
+            if (openAlertDialog.value == true) {
+                Dialog(
+                    onDismissRequest = {
+                        openAlertDialog.value = false
+                        timeLeft = viewState.durationInMinutes
+                    },
+                ) {
+                    SettingsScreen(preferencesManager = preferencesManager, closeButton = {
+                        openAlertDialog.value = false
+                        timeLeft = viewState.durationInMinutes
 
 
                     }, viewModel = homeViewModel)
@@ -185,12 +189,8 @@ fun HomePage(){
                 }
             }
 
-
         }
     }
-
-
-
 
 }
 
