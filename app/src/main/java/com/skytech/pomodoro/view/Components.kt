@@ -74,10 +74,14 @@ fun ChangeValueButton(state: HomeViewModel.PomodoroState, lenght: MutableState<I
             )
         }
         Text(text = (lenght.value).toString())
-        IconButton(onClick = {
-            lenght.value += 1
-            state.updateStateDuration(lenght.value * 60)
-        }) {
+        IconButton(
+            onClick = {
+                lenght.value += 1
+                state.updateStateDuration(lenght.value * 60)
+
+
+            }, enabled = lenght.value < 90
+        ) {
             Icon(
                 painter = painterResource(id = R.drawable.increment_icon),
                 contentDescription = "Decrement"
