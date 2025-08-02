@@ -49,7 +49,7 @@ fun HomePage() {
     val viewState by homeViewModel.pomoState
     val context = LocalContext.current
     val mediaPlayer = remember { MediaPlayer.create(context, R.raw.timer) }
-    val preferencesManager = PreferencesManager(context)
+    val preferencesManager = remember { PreferencesManager.getInstance(context) }
 
 
     var isPaused by remember { mutableStateOf(true) }
@@ -165,6 +165,7 @@ fun HomePage() {
                 buttonIcon = Icons.Default.Settings,
                 iconColor = viewState.iconColor,
                 onClick = {
+                    isPaused = true
                     openAlertDialog.value = true
 
                 })
