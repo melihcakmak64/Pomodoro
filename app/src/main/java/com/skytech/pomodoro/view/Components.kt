@@ -26,41 +26,62 @@ import com.skytech.pomodoro.R
 import com.skytech.pomodoro.view_model.HomeViewModel
 
 @Composable
-fun PomoButton(height: Dp, width: Dp, backgroundColor: Color, buttonIcon: ImageVector, iconColor: Color, onClick: () -> Unit){
-    Box(modifier = Modifier
-        .size(height = height, width = width)
-        .background(color = backgroundColor, shape = RoundedCornerShape(25.dp))
-        .padding(20.dp)
-        .clickable(indication = null, interactionSource = MutableInteractionSource(),onClick= { onClick() })
+fun PomoButton(
+    height: Dp,
+    width: Dp,
+    backgroundColor: Color,
+    buttonIcon: ImageVector,
+    iconColor: Color,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .size(height = height, width = width)
+            .background(color = backgroundColor, shape = RoundedCornerShape(12.dp))
+            .padding(15.dp)
+            .clickable(
+                indication = null,
+                interactionSource = MutableInteractionSource(),
+                onClick = { onClick() })
 
 
-    ){
-        Icon(modifier = Modifier.fillMaxSize(),imageVector = buttonIcon ,contentDescription ="" , tint = iconColor)
+    ) {
+        Icon(
+            modifier = Modifier.fillMaxSize(),
+            imageVector = buttonIcon,
+            contentDescription = "",
+            tint = iconColor
+        )
     }
-
-
-
 
 
 }
 
 
 @Composable
-fun ChangeValueButton(state: HomeViewModel.PomodoroState, lenght: MutableState<Int>,){
+fun ChangeValueButton(state: HomeViewModel.PomodoroState, lenght: MutableState<Int>) {
 
-    Row (verticalAlignment = Alignment.CenterVertically){
+    Row(verticalAlignment = Alignment.CenterVertically) {
         IconButton(onClick = {
-            if(lenght.value-1>0){ lenght.value-=1
-                state.updateStateDuration(lenght.value*60)}
-           }) {
-            Icon(painter = painterResource(id = R.drawable.baseline_remove_24), contentDescription = "Increment")
+            if (lenght.value - 1 > 0) {
+                lenght.value -= 1
+                state.updateStateDuration(lenght.value * 60)
+            }
+        }) {
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_remove_24),
+                contentDescription = "Increment"
+            )
         }
         Text(text = (lenght.value).toString())
         IconButton(onClick = {
-            lenght.value+=1
-            state.updateStateDuration(lenght.value*60)
+            lenght.value += 1
+            state.updateStateDuration(lenght.value * 60)
         }) {
-            Icon(painter = painterResource(id = R.drawable.increment_icon), contentDescription = "Decrement")
+            Icon(
+                painter = painterResource(id = R.drawable.increment_icon),
+                contentDescription = "Decrement"
+            )
         }
     }
 }
