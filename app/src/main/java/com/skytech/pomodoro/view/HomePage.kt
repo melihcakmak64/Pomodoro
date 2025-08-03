@@ -2,7 +2,6 @@ package com.skytech.pomodoro.view
 
 import android.media.MediaPlayer
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,6 +38,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skytech.pomodoro.PreferencesManager
 import com.skytech.pomodoro.R
 import com.skytech.pomodoro.ui.theme.RubikMonoOne
+import com.skytech.pomodoro.view.components.ProgressOutlineRoundedRect
 import com.skytech.pomodoro.view_model.HomeViewModel
 import kotlinx.coroutines.delay
 
@@ -96,6 +96,17 @@ fun HomePage() {
                         shape = RoundedCornerShape(bottomStart = 120.dp, bottomEnd = 120.dp)
                     ), contentAlignment = Alignment.Center
             ) {
+
+
+                ProgressOutlineRoundedRect(
+                    modifier = Modifier.fillMaxSize(),
+                    progress = timeLeft / viewState.durationInMinutes.toFloat(),
+                    color = viewState.buttonColor,
+                    strokeWidth = 6.dp,
+                    cornerRadius = 120.dp
+                )
+
+                // Dijital Saat
                 Text(
                     text = "${(timeLeft / 60).toString().padStart(2, '0')}\n${
                         (timeLeft % 60).toString().padStart(2, '0')
@@ -105,9 +116,9 @@ fun HomePage() {
                     color = viewState.clockColor,
                     fontFamily = RubikMonoOne,
                     lineHeight = 92.sp
-
                 )
             }
+
             Spacer(modifier = Modifier.height(30.dp))
 
 
