@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.skytech.pomodoro.PreferencesManager
 import com.skytech.pomodoro.R
+import com.skytech.pomodoro.view.components.ChangeValueButton
 import com.skytech.pomodoro.view_model.HomeViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

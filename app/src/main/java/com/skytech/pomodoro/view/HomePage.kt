@@ -38,6 +38,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skytech.pomodoro.PreferencesManager
 import com.skytech.pomodoro.R
 import com.skytech.pomodoro.ui.theme.RubikMonoOne
+import com.skytech.pomodoro.view.components.PomoButton
 import com.skytech.pomodoro.view.components.ProgressOutlineRoundedRect
 import com.skytech.pomodoro.view_model.HomeViewModel
 import kotlinx.coroutines.delay
