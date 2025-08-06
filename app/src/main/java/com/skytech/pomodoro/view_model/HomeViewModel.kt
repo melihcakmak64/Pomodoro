@@ -1,9 +1,14 @@
 package com.skytech.pomodoro.view_model
 
+import android.content.Context
+import android.media.MediaPlayer
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.skytech.pomodoro.PreferencesManager
+import com.skytech.pomodoro.R
 
 import com.skytech.pomodoro.ui.theme.focus_background_color
 import com.skytech.pomodoro.ui.theme.focus_button_background_color
@@ -20,16 +25,82 @@ import com.skytech.pomodoro.ui.theme.short_button_background_color
 import com.skytech.pomodoro.ui.theme.short_clock_color
 import com.skytech.pomodoro.ui.theme.short_icon_color
 import com.skytech.pomodoro.ui.theme.short_title_color
+import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel(){
-    private var _pomoState= mutableStateOf<PomodoroState>(PomodoroState.FOCUS)
-    var pomoState: State<PomodoroState> =_pomoState
-    var sound=
-        mutableStateOf(false)
+class HomeViewModel : ViewModel() {
+    private val _pomoState = mutableStateOf<PomodoroState>(PomodoroState.FOCUS)
+    val pomoState: State<PomodoroState> = _pomoState
 
+    val sound = mutableStateOf(false)
+    val isPaused = mutableStateOf(true)
+    val timeLeft = mutableStateOf(_pomoState.value.durationInMinutes)
+    val cycleCount = mutableStateOf(0)
 
+    private var mediaPlayer: MediaPlayer? = null
 
+    fun initMediaPlayer(context: Context) {
+        mediaPlayer = MediaPlayer.create(context, R.raw.timer)
+    }
 
+    fun togglePause() {
+        isPaused.value = !isPaused.value
+    }
+
+    fun resetTime() {
+        timeLeft.value = _pomoState.value.durationInMinutes
+    }
+
+    fun skipToNextState() {
+        nextState(_pomoState.value, cycleCount.value)
+        mediaPlayer?.stop()
+        resetTime()
+        cycleCount.value += 1
+    }
+
+    fun onTick() {
+        if (timeLeft.value > 0) {
+            timeLeft.value -= 1
+
+            if (timeLeft.value == 3 && !isPaused.value && sound.value) {
+                mediaPlayer?.start()
+            }
+        } else {
+            nextState(_pomoState.value, cycleCount.value)
+            resetTime()
+            cycleCount.value += 1
+        }
+    }
+
+    fun nextState(pomodoroState: PomodoroState, cycleCount: Int): PomodoroState {
+        return when (pomodoroState) {
+            PomodoroState.FOCUS -> {
+                _pomoState.value = if (cycleCount % 8 == 6 && cycleCount != 0) {
+                    PomodoroState.LONG_BREAK
+                } else {
+                    PomodoroState.SHORT_BREAK
+                }
+                _pomoState.value
+            }
+            PomodoroState.SHORT_BREAK,
+            PomodoroState.LONG_BREAK -> {
+                _pomoState.value = PomodoroState.FOCUS
+                PomodoroState.FOCUS
+            }
+        }
+    }
+
+    fun loadSoundSetting(preferencesManager: PreferencesManager) {
+        viewModelScope.launch {
+            sound.value = preferencesManager.getSound()
+        }
+    }
+
+    fun toggleSoundSetting(preferencesManager: PreferencesManager) {
+        sound.value = !sound.value
+        viewModelScope.launch {
+            preferencesManager.setSound(sound.value)
+        }
+    }
 
 
     sealed class PomodoroState(
@@ -40,63 +111,21 @@ class HomeViewModel : ViewModel(){
         val clockColor: Color,
         val buttonColor: Color,
         val iconColor: Color,
+    ) {
+        object FOCUS : PomodoroState(25 * 60, "FOCUS", focus_background_color, focus_title_color,
+            focus_clock_color, focus_button_background_color, focus_icon_color)
 
-        ) {
-        object FOCUS : PomodoroState(25*60, "FOCUS", focus_background_color, focus_title_color,
-            focus_clock_color, focus_button_background_color, focus_icon_color
-        )
-        object SHORT_BREAK : PomodoroState(5*60, "SHORT\nBREAK", short_background_color, short_title_color,
-            short_clock_color, short_button_background_color,
-            short_icon_color
-        )
-        object LONG_BREAK : PomodoroState(durationInMinutes = 10*60,"LONG\n" +
-                "BREAK",  long_background_color, long_title_color,
-            long_clock_color, long_button_background_color, long_icon_color
-        )
+        object SHORT_BREAK : PomodoroState(5 * 60, "SHORT\nBREAK", short_background_color, short_title_color,
+            short_clock_color, short_button_background_color, short_icon_color)
 
+        object LONG_BREAK : PomodoroState(10 * 60, "LONG\nBREAK", long_background_color, long_title_color,
+            long_clock_color, long_button_background_color, long_icon_color)
 
-
-        fun updateStateDuration(duration:Int){
-            durationInMinutes=duration
-
+        fun updateStateDuration(duration: Int) {
+            durationInMinutes = duration
         }
-    }
 
-    fun nextState(pomodoroState: PomodoroState, cycleCount: Int): PomodoroState {
-
-        // Pomodoro durumuna göre işlemleri yap
-        return when (pomodoroState) {
-            PomodoroState.FOCUS -> {
-                // Focus süresi bitti, Break süresini başlat
-                if (cycleCount % 8 == 6 && cycleCount != 0) {
-                    _pomoState.value = PomodoroState.LONG_BREAK
-                    PomodoroState.LONG_BREAK
-                } else {
-                    _pomoState.value = PomodoroState.SHORT_BREAK
-                    PomodoroState.SHORT_BREAK
-                }
-            }
-            PomodoroState.SHORT_BREAK -> {
-                // Break süresi bitti, Focus süresini başlat
-                _pomoState.value = PomodoroState.FOCUS
-                PomodoroState.FOCUS
-            }
-            else -> {
-                _pomoState.value = PomodoroState.FOCUS
-                PomodoroState.FOCUS
-            }
-        }
-    }
-
-
-    fun changeSound(){
-        sound.value=!sound.value
 
     }
-
-
-
-
-
 
 }

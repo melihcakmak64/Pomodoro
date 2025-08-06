@@ -52,10 +52,8 @@ fun SettingsScreen(
     }
 
     LaunchedEffect(key1 = true) {
-        CoroutineScope(Dispatchers.Default).launch {
-            viewModel.sound.value = preferencesManager.getSound()
+        viewModel.loadSoundSetting(preferencesManager)
 
-        }
     }
 
 
@@ -110,11 +108,7 @@ fun SettingsScreen(
                 Switch(
                     checked = viewModel.sound.value,
                     onCheckedChange = {
-                        viewModel.changeSound()
-
-                        CoroutineScope(Dispatchers.Default).launch {
-                            preferencesManager.setSound(viewModel.sound.value)
-                        }
+                        viewModel.toggleSoundSetting(preferencesManager)
                     }
                 )
             })

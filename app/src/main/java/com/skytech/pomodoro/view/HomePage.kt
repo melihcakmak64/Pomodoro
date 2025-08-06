@@ -48,36 +48,22 @@ import kotlinx.coroutines.delay
 fun HomePage() {
     val homeViewModel: HomeViewModel = viewModel()
     val viewState by homeViewModel.pomoState
+    val timeLeft by homeViewModel.timeLeft
+    val isPaused by homeViewModel.isPaused
     val context = LocalContext.current
-    val mediaPlayer = remember { MediaPlayer.create(context, R.raw.timer) }
-    val preferencesManager = remember { PreferencesManager.getInstance(context) }
-
-
-    var isPaused by remember { mutableStateOf(true) }
-    var timeLeft by remember { mutableStateOf(viewState.durationInMinutes) }
-    var cycleCount by remember { mutableStateOf(0) }
     val openAlertDialog = remember { mutableStateOf(false) }
 
-
-    LaunchedEffect(key1 = timeLeft, key2 = isPaused) {
-        if (timeLeft == 0) {
-            homeViewModel.nextState(viewState, cycleCount)
-            timeLeft = viewState.durationInMinutes
-            cycleCount++
-        }
-
-        if (timeLeft == 3 && !isPaused && homeViewModel.sound.value) {
-            // Play sound when timeLeft is 3 seconds and not paused
-            mediaPlayer.start()
-        }
-
-
-        while (timeLeft > 0 && !isPaused) {
-            delay(1000L)
-            timeLeft--
-        }
-
+    LaunchedEffect(Unit) {
+        homeViewModel.initMediaPlayer(context)
     }
+
+    LaunchedEffect(timeLeft, isPaused) {
+        if (!isPaused && timeLeft >= 0) {
+            delay(1000L)
+            homeViewModel.onTick()
+        }
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = viewState.backgroundColor
@@ -152,7 +138,7 @@ fun HomePage() {
                     backgroundColor = viewState.buttonColor,
                     buttonIcon = if (isPaused) Icons.Default.PlayArrow else Icons.Default.Pause,
                     iconColor = viewState.iconColor,
-                    onClick = { isPaused = !isPaused })
+                    onClick = { homeViewModel.togglePause()  })
                 Spacer(modifier = Modifier.width(15.dp))
 
                 PomoButton(
@@ -162,10 +148,7 @@ fun HomePage() {
                     buttonIcon = Icons.Default.FastForward,
                     iconColor = viewState.iconColor,
                     onClick = {
-                        homeViewModel.nextState(viewState, cycleCount)
-                        mediaPlayer.stop()
-                        timeLeft = viewState.durationInMinutes
-                        cycleCount++
+                        homeViewModel.skipToNextState()
                     })
 
             }
@@ -177,7 +160,7 @@ fun HomePage() {
                 buttonIcon = Icons.Default.Settings,
                 iconColor = viewState.iconColor,
                 onClick = {
-                    isPaused = true
+                    homeViewModel.isPaused.value = true
                     openAlertDialog.value = true
 
                 })
@@ -186,12 +169,14 @@ fun HomePage() {
                 Dialog(
                     onDismissRequest = {
                         openAlertDialog.value = false
-                        timeLeft = viewState.durationInMinutes
+                        homeViewModel.resetTime()
                     },
                 ) {
+                    val preferencesManager = remember { PreferencesManager.getInstance(context) }
+
                     SettingsScreen(preferencesManager = preferencesManager, closeButton = {
                         openAlertDialog.value = false
-                        timeLeft = viewState.durationInMinutes
+                        homeViewModel.resetTime()
 
 
                     }, viewModel = homeViewModel)
