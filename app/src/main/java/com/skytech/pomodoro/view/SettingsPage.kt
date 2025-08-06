@@ -35,7 +35,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    preferencesManager: PreferencesManager,
     closeButton: () -> Unit,
     viewModel: HomeViewModel
 ) {
@@ -50,14 +49,6 @@ fun SettingsScreen(
     val longTime = remember {
         mutableStateOf(HomeViewModel.PomodoroState.LONG_BREAK.durationInMinutes / 60)
     }
-
-    LaunchedEffect(key1 = true) {
-        viewModel.loadSoundSetting(preferencesManager)
-
-    }
-
-
-
 
 
     Box(
@@ -108,7 +99,7 @@ fun SettingsScreen(
                 Switch(
                     checked = viewModel.sound.value,
                     onCheckedChange = {
-                        viewModel.toggleSoundSetting(preferencesManager)
+                        viewModel.toggleSoundSetting()
                     }
                 )
             })

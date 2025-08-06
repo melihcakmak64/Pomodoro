@@ -1,10 +1,12 @@
 package com.skytech.pomodoro.view_model
 
+import android.app.Application
 import android.content.Context
 import android.media.MediaPlayer
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.skytech.pomodoro.PreferencesManager
@@ -27,7 +29,9 @@ import com.skytech.pomodoro.ui.theme.short_icon_color
 import com.skytech.pomodoro.ui.theme.short_title_color
 import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(application: Application) : AndroidViewModel(application) {
+    private val preferencesManager = PreferencesManager.getInstance(application)
+
     private val _pomoState = mutableStateOf<PomodoroState>(PomodoroState.FOCUS)
     val pomoState: State<PomodoroState> = _pomoState
 
@@ -81,6 +85,7 @@ class HomeViewModel : ViewModel() {
                 }
                 _pomoState.value
             }
+
             PomodoroState.SHORT_BREAK,
             PomodoroState.LONG_BREAK -> {
                 _pomoState.value = PomodoroState.FOCUS
@@ -89,13 +94,13 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun loadSoundSetting(preferencesManager: PreferencesManager) {
+    fun loadSoundSetting() {
         viewModelScope.launch {
             sound.value = preferencesManager.getSound()
         }
     }
 
-    fun toggleSoundSetting(preferencesManager: PreferencesManager) {
+    fun toggleSoundSetting() {
         sound.value = !sound.value
         viewModelScope.launch {
             preferencesManager.setSound(sound.value)
@@ -112,14 +117,20 @@ class HomeViewModel : ViewModel() {
         val buttonColor: Color,
         val iconColor: Color,
     ) {
-        object FOCUS : PomodoroState(25 * 60, "FOCUS", focus_background_color, focus_title_color,
-            focus_clock_color, focus_button_background_color, focus_icon_color)
+        object FOCUS : PomodoroState(
+            25 * 60, "FOCUS", focus_background_color, focus_title_color,
+            focus_clock_color, focus_button_background_color, focus_icon_color
+        )
 
-        object SHORT_BREAK : PomodoroState(5 * 60, "SHORT\nBREAK", short_background_color, short_title_color,
-            short_clock_color, short_button_background_color, short_icon_color)
+        object SHORT_BREAK : PomodoroState(
+            5 * 60, "SHORT\nBREAK", short_background_color, short_title_color,
+            short_clock_color, short_button_background_color, short_icon_color
+        )
 
-        object LONG_BREAK : PomodoroState(10 * 60, "LONG\nBREAK", long_background_color, long_title_color,
-            long_clock_color, long_button_background_color, long_icon_color)
+        object LONG_BREAK : PomodoroState(
+            10 * 60, "LONG\nBREAK", long_background_color, long_title_color,
+            long_clock_color, long_button_background_color, long_icon_color
+        )
 
         fun updateStateDuration(duration: Int) {
             durationInMinutes = duration

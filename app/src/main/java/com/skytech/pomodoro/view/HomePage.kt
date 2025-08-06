@@ -55,6 +55,7 @@ fun HomePage() {
 
     LaunchedEffect(Unit) {
         homeViewModel.initMediaPlayer(context)
+        homeViewModel.loadSoundSetting()
     }
 
     LaunchedEffect(timeLeft, isPaused) {
@@ -138,7 +139,7 @@ fun HomePage() {
                     backgroundColor = viewState.buttonColor,
                     buttonIcon = if (isPaused) Icons.Default.PlayArrow else Icons.Default.Pause,
                     iconColor = viewState.iconColor,
-                    onClick = { homeViewModel.togglePause()  })
+                    onClick = { homeViewModel.togglePause() })
                 Spacer(modifier = Modifier.width(15.dp))
 
                 PomoButton(
@@ -172,9 +173,8 @@ fun HomePage() {
                         homeViewModel.resetTime()
                     },
                 ) {
-                    val preferencesManager = remember { PreferencesManager.getInstance(context) }
 
-                    SettingsScreen(preferencesManager = preferencesManager, closeButton = {
+                    SettingsScreen(closeButton = {
                         openAlertDialog.value = false
                         homeViewModel.resetTime()
 
