@@ -132,11 +132,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             long_clock_color, long_button_background_color, long_icon_color
         )
 
-        fun updateStateDuration(duration: Int) {
-            durationInMinutes = duration
-        }
-
-
     }
 
 }

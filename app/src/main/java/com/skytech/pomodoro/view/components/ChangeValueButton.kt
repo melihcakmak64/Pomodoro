@@ -18,7 +18,7 @@ fun ChangeValueButton(state: HomeViewModel.PomodoroState, lenght: MutableState<I
         IconButton(onClick = {
             if (lenght.value - 1 > 0) {
                 lenght.value -= 1
-                state.updateStateDuration(lenght.value * 60)
+                state.durationInMinutes = lenght.value * 60
             }
         }) {
             Icon(
@@ -30,8 +30,7 @@ fun ChangeValueButton(state: HomeViewModel.PomodoroState, lenght: MutableState<I
         IconButton(
             onClick = {
                 lenght.value += 1
-                state.updateStateDuration(lenght.value * 60)
-
+                state.durationInMinutes = lenght.value * 60
 
             }, enabled = lenght.value < 90
         ) {
