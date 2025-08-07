@@ -9,10 +9,10 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import com.skytech.pomodoro.R
-import com.skytech.pomodoro.view_model.HomeViewModel
+import com.skytech.pomodoro.view_model.PomodoroState
 
 @Composable
-fun ChangeValueButton(state: HomeViewModel.PomodoroState, lenght: MutableState<Int>) {
+fun ChangeValueButton(state: PomodoroState, lenght: MutableState<Int>) {
 
     Row(verticalAlignment = Alignment.CenterVertically) {
         IconButton(onClick = {

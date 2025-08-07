@@ -24,13 +24,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.skytech.pomodoro.PreferencesManager
 import com.skytech.pomodoro.R
 import com.skytech.pomodoro.view.components.ChangeValueButton
 import com.skytech.pomodoro.view_model.HomeViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.skytech.pomodoro.view_model.PomodoroState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,13 +38,13 @@ fun SettingsScreen(
 
 
     var focusTime = remember {
-        mutableStateOf(HomeViewModel.PomodoroState.FOCUS.durationInMinutes / 60)
+        mutableStateOf(PomodoroState.FOCUS.durationInMinutes / 60)
     }
     val shortTime = remember {
-        mutableStateOf(HomeViewModel.PomodoroState.SHORT_BREAK.durationInMinutes / 60)
+        mutableStateOf(PomodoroState.SHORT_BREAK.durationInMinutes / 60)
     }
     val longTime = remember {
-        mutableStateOf(HomeViewModel.PomodoroState.LONG_BREAK.durationInMinutes / 60)
+        mutableStateOf(PomodoroState.LONG_BREAK.durationInMinutes / 60)
     }
 
 
@@ -74,14 +71,14 @@ fun SettingsScreen(
 
             ListItem(headlineText = { Text(text = "Pomodoro Lenght") }, trailingContent = {
                 ChangeValueButton(
-                    HomeViewModel.PomodoroState.FOCUS, focusTime
+                    PomodoroState.FOCUS, focusTime
                 )
             })
             ListItem(
                 headlineText = { Text(text = "Short Break Lenght") },
                 trailingContent = {
                     ChangeValueButton(
-                        HomeViewModel.PomodoroState.SHORT_BREAK,
+                        PomodoroState.SHORT_BREAK,
                         shortTime
                     )
                 })
@@ -90,7 +87,7 @@ fun SettingsScreen(
                 headlineText = { Text(text = "Long Break Lenght") },
                 trailingContent = {
                     ChangeValueButton(
-                        HomeViewModel.PomodoroState.LONG_BREAK,
+                        PomodoroState.LONG_BREAK,
                         longTime
                     )
                 })
